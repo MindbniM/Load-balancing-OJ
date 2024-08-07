@@ -1,3 +1,0 @@
-/home/mindbnim/code/OJ/Compile_Server/build/CMakeFiles/C_server.dir
-/home/mindbnim/code/OJ/Compile_Server/build/CMakeFiles/edit_cache.dir
-/home/mindbnim/code/OJ/Compile_Server/build/CMakeFiles/rebuild_cache.dir
