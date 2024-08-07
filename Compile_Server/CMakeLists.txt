@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 3.20)
+project(Compile_Server)
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED on)
+include_directories("/home/mindbnim/code/OJ/util")
+add_executable(C_server server.cpp)
