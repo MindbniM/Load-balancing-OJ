@@ -1,6 +1,8 @@
 #pragma once
 #include<string>
 #include<unistd.h>
+#include<sys/time.h>
+#include<sys/resource.h>
 #include"Path_util.hpp"
 enum Run_err
 {
@@ -11,6 +13,17 @@ enum Run_err
 class Runner
 {
 public:
+    static void Set_procLimit(int cpu_time_limit,int mem_limit)
+    {
+        struct rlimit cpu;
+        cpu.rlim_max=RLIM_INFINITY;
+        cpu.rlim_cur=cpu_time_limit;
+        setrlimit(RLIMIT_CPU,&cpu);
+        struct rlimit mem;
+        mem.rlim_max=RLIM_INFINITY;
+        mem.rlim_cur=mem_limit*1024;
+        setrlimit(RLIMIT_AS,&mem);
+    }
     static int Run(const std::string& filename)
     {
         std::string exe=util::Path_util::Exefile(filename);
