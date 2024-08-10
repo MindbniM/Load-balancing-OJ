@@ -1,12 +1,9 @@
 #pragma once
 #include<iostream>
 #include<unistd.h>
-#include<sys/types.h>
-#include"Path_util.hpp"
 #include<sys/wait.h>
-#include<sys/stat.h>
-#include<fcntl.h>
 #include"log.hpp"
+#include"Path_util.hpp"
 enum  Compile_Error
 {
     FILE_CREATE_ERROR=1,
@@ -17,7 +14,7 @@ class Compile
 public:
     bool static Compile_file(const std::string& file)
     {
-        std::string src=util::Path_util::Srcfile(file,"cpp");
+        std::string src=util::Path_util::Srcfile(file);
         std::string exe=util::Path_util::Exefile(file);
         std::string err=util::Path_util::Errorfile(file);
         pid_t id=fork();
@@ -33,10 +30,8 @@ public:
             exit(EXEC_ERROR);
         }
         waitpid(id,nullptr,0);
-        struct stat s;
-        int n=stat(exe.c_str(),&s);
         using enum Log_util::log_level;
-        if(n==0) 
+        if(util::Path_util::IsExist(exe)==0) 
         {
             LOG(INFO,"编译成功生成:%s",exe.c_str());
             return true;
