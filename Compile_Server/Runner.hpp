@@ -6,9 +6,9 @@
 #include"File_util.hpp"
 enum Run_err
 {
-    OPEN_ERR=1,
-    EXEC_ERR,
-    FORK_ERR,
+    OPEN_ERR=-1,
+    EXEC_ERR=-2,
+    FORK_ERR=-3,
 };
 class Runner
 {
@@ -24,7 +24,7 @@ public:
         mem.rlim_cur=mem_limit*1024;
         setrlimit(RLIMIT_AS,&mem);
     }
-    static int Run(const std::string& filename)
+    static int Run(const std::string& filename,int cpu_limit,int mem_limit)
     {
         std::string exe=util::Path_util::Exefile(filename);
         std::string Stdin=util::Path_util::Stdin(filename);
@@ -51,6 +51,7 @@ public:
             dup2(in,0);
             dup2(out,1);
             dup2(err,2);
+            Set_procLimit(cpu_limit,mem_limit);
             execl(exe.c_str(),exe.c_str(),nullptr);
             exit(EXEC_ERR);
         }
