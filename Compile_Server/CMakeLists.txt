@@ -6,3 +6,5 @@ include_directories("/home/mindbnim/code/OJ/util")
 find_package(jsoncpp REQUIRED)
 add_executable(C_server server.cpp)
 target_link_libraries(C_server jsoncpp_lib)
+target_link_libraries(C_server pthread)
+

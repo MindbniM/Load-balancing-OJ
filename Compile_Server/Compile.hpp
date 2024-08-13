@@ -35,7 +35,7 @@ public:
         }
         waitpid(id,nullptr,0);
         using enum Log_util::log_level;
-        if(util::Path_util::IsExist(exe)==0) 
+        if(util::File_util::IsExist(exe)) 
         {
             LOG(INFO,"编译成功生成:%s",exe.c_str());
             return 0;

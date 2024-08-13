@@ -1,25 +1,21 @@
 #include<jsoncpp/json/json.h>
 #include"Compile_run.hpp"
+#include "log.hpp"
+#include<httplib.h>
 int main()
 {
     ADD_APPENDER_STDOUT(Log_util::log_level::DEBUG);
-    Json::Value root;
-    root["code"]=R"(
-    #include<iostream>
-    #include<cstdlib>
-    int main()
+    httplib::Server sr;
+    sr.Get("/Compile_Run",[](const httplib::Request& re,httplib::Response& rp)
     {
-        std::cout<<"what can i sey"<<std::endl;
-        return 0;
-    }
-    )";
-    root["input"]="";
-    root["cpu_limit"]=3;
-    root["mem_limit"]=10240*3;
-    Json::FastWriter w;
-    std::string in=w.write(root);
-    std::string out;
-    Compile_run::start(in,out);
-    std::cout<<out<<std::endl;
+        std::string jsonin=re.body;
+        std::string jsonout;
+        if(!jsonin.empty())
+        {
+            Compile_run::start(jsonin,jsonout);
+            rp.set_content(jsonout,"application/json;chatset=utf-8");
+        }
+    });
+    sr.listen("0.0.0.0",8848);
     return 0;
 }

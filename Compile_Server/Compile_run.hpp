@@ -27,16 +27,38 @@ class Compile_run
         case NONE_ERROR:
             return "未知错误";
         case SIGABRT:
-            return "内存使用超过限制";
+            return "内存使用超过限制,请检查你的代码的空间复杂度";
         case SIGXCPU:
-            return "运行超时";
+            return "程序运行超时,请检查你的代码的时间复杂度";
         case SIGFPE:
-            return "浮点数错误";
+            return "程序浮点数错误,可能是除0等错误";
+        case SIGSEGV:
+            return "程序发生段错误,可能是数组越界,野指针等错误";
         default:
             return "debug";
         }
     }
+    static void remove(const std::string& filename)
+    {
+        std::string Src=util::Path_util::Srcfile(filename);
+        util::File_util::Rm(Src);
 
+        std::string Exe=util::Path_util::Exefile(filename);
+        util::File_util::Rm(Exe);
+
+        std::string Error=util::Path_util::Errorfile(filename);
+        util::File_util::Rm(Error);
+
+        std::string Stdin=util::Path_util::Stdin(filename);
+        util::File_util::Rm(Stdin);
+
+        std::string Stdout=util::Path_util::Stdout(filename);
+        util::File_util::Rm(Stdout);
+
+        std::string Stderr=util::Path_util::Stderr(filename);
+        util::File_util::Rm(Stderr);
+        
+    }
 public:
     static bool start(const std::string &injson, std::string &outjson)
     {
@@ -90,7 +112,8 @@ public:
         }
         Json::FastWriter wr;
         outjson=wr.write(out);
-        util::File_util::rm(UinqFileName);
+        remove(UinqFileName);
+        LOG(Log_util::log_level::INFO,"%s 删除临时文件",UinqFileName.c_str());
         return true;
     }
 };

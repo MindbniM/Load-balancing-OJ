@@ -66,7 +66,7 @@ public:
         }
         else 
         {
-            LOG(Log_util::log_level::INFO,"%s 出错 sigin: %d",filename.c_str(),(status&0x7f));
+            LOG(Log_util::log_level::INFO,"%s 运行出错 sigin: %d",filename.c_str(),(status&0x7f));
         }
         return status&0x7f;
     }
