@@ -30,6 +30,7 @@ namespace SQL
 class Model
 {
 public:
+    using iterator=std::map<int,question>::const_iterator;
     Model()
     {
         int i=1;
@@ -57,7 +58,7 @@ public:
             _v[i]=q;
             i++;
         }
-        std::cout<<i<<std::endl;
+        LOG(Log_util::log_level::INFO,"获取%d个题目信息",i-1);
     }
     bool get_question(int id,question& q)
     {
@@ -77,6 +78,14 @@ public:
             std::cout<<"///"<<_v[i].cpu_limit<<" "<<_v[i].mem_limit<<std::endl;
             i++;
         }
+    }
+    iterator begin() const
+    {
+        return _v.begin();
+    }
+    iterator end() const
+    {
+        return _v.end();
     }
 private:
     std::map<int,question> _v;
