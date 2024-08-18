@@ -20,7 +20,9 @@ public:
         temp->Expand(&html,&root);
         return true;
     }
-    void OneExpandHtml(const Model& m,int number,std::string& html)
-    {}
+    bool OneExpandHtml(const Model& m,int number,std::string& html)
+    {
+        return true;
+    }
 private:
 };

@@ -10,9 +10,10 @@ set(MySQL_LIBRARIES "/usr/lib/x86_64-linux-gnu/libmysqlclient.so")
 set(ctemplate_INCLUDE_DIR "/usr/local/include/ctemplate")
 set(ctemplate_LIBRARIES "/usr/local/lib/libctemplate.so")
 
+find_package(jsoncpp REQUIRED)
 include_directories("../util")
 
 add_executable(Server server.cpp)
 
-target_link_libraries(Server ${MySQL_LIBRARIES} ${ctemplate_LIBRARIES} pthread)
+target_link_libraries(Server ${MySQL_LIBRARIES} ${ctemplate_LIBRARIES} jsoncpp pthread)
 
