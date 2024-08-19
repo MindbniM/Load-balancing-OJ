@@ -24,12 +24,14 @@ public:
         mem.rlim_cur=mem_limit*1024;
         setrlimit(RLIMIT_AS,&mem);
     }
-    static int Run(const std::string& filename,int cpu_limit,int mem_limit)
+    static int Run(const std::string& filename,int cpu_limit,int mem_limit,const std::string& language)
     {
-        std::string exe=util::Path_util::Exefile(filename);
+        std::string exe;
+        if(language=="c_cpp")   exe=util::Path_util::Exefile(filename);
         std::string Stdin=util::Path_util::Stdin(filename);
         std::string Stdout=util::Path_util::Stdout(filename);
         std::string Stderr=util::Path_util::Stderr(filename);
+        std::string Src=util::Path_util::Srcfile(filename,language);
         int in=open(Stdin.c_str(),O_CREAT|O_WRONLY,0666);
         int out=open(Stdout.c_str(),O_CREAT|O_WRONLY,0666);
         int err=open(Stderr.c_str(),O_CREAT|O_WRONLY,0666);
@@ -52,7 +54,8 @@ public:
             dup2(out,1);
             dup2(err,2);
             Set_procLimit(cpu_limit,mem_limit);
-            execl(exe.c_str(),exe.c_str(),nullptr);
+            if(language=="c_cpp")   execl(exe.c_str(),exe.c_str(),nullptr);
+            else if(language=="python") execlp("python3","python3",Src.c_str(),nullptr);
             exit(EXEC_ERR);
         }
         close(in);

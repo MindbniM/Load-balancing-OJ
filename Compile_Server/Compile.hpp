@@ -12,9 +12,10 @@ enum
 class Compile
 {
 public:
-    int static Compile_file(const std::string& file)
+    int static Compile_file(const std::string& file,const std::string language)
     {
-        std::string src=util::Path_util::Srcfile(file);
+        if(language=="python") return 0;
+        std::string src=util::Path_util::Srcfile(file,language);
         std::string exe=util::Path_util::Exefile(file);
         std::string err=util::Path_util::Errorfile(file);
         pid_t id=fork();

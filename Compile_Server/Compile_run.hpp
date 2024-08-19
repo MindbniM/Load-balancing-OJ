@@ -38,9 +38,9 @@ class Compile_run
             return "debug";
         }
     }
-    static void remove(const std::string& filename)
+    static void remove(const std::string& filename,const std::string& language)
     {
-        std::string Src=util::Path_util::Srcfile(filename);
+        std::string Src=util::Path_util::Srcfile(filename,language);
         util::File_util::Rm(Src);
 
         std::string Exe=util::Path_util::Exefile(filename);
@@ -69,6 +69,7 @@ public:
         std::string input = root["input"].asString();
         int cpulimit = root["cpu_limit"].asInt();
         int memlimit = root["mem_limit"].asInt();
+        std::string language=root["language"].asString();
         std::string UinqFileName;
         int reson = 0;
         int run_code;
@@ -79,8 +80,8 @@ public:
             goto END;
         }
         UinqFileName = util::Path_util::get_uinque_name();
-        util::File_util::Write(util::Path_util::Srcfile(UinqFileName),code);
-        run_code = Compile::Compile_file(UinqFileName);
+        util::File_util::Write(util::Path_util::Srcfile(UinqFileName,language),code);
+        run_code = Compile::Compile_file(UinqFileName,language);
         if (run_code > 0)
         {
             reson = NONE_ERROR;
@@ -91,7 +92,7 @@ public:
             reson = COMPILE_ERROR;
             goto END;
         }
-        reson = Runner::Run(UinqFileName,cpulimit,memlimit);
+        reson = Runner::Run(UinqFileName,cpulimit,memlimit,language);
         if (reson < 0)
         {
             reson = NONE_ERROR;
@@ -107,12 +108,12 @@ public:
             util::File_util::Read(util::Path_util::Stdout(UinqFileName),o,true);
             out["stdout"] =o;
             std::string i;
-            i=util::File_util::Read(util::Path_util::Stderr(UinqFileName),i,true);
+            util::File_util::Read(util::Path_util::Stderr(UinqFileName),i,true);
             out["stderr"] = i;
         }
         Json::FastWriter wr;
         outjson=wr.write(out);
-        remove(UinqFileName);
+        remove(UinqFileName,language);
         LOG(Log_util::log_level::INFO,"%s 删除临时文件",UinqFileName.c_str());
         return true;
     }
