@@ -20,9 +20,25 @@ public:
         temp->Expand(&html,&root);
         return true;
     }
-    bool OneExpandHtml(const Model& m,int number,std::string& html)
+    bool OneExpandHtml(const question& q,std::string& html)
     {
-        return true;
+         // 1. 形成路径
+            std::string src_html = TEMP_PATH + "one_question.html";
+
+            
+            ctemplate::TemplateDictionary root("one_question");
+            root.SetValue("number", std::to_string(q.head.number));
+            root.SetValue("title", q.head.title);
+            root.SetValue("star", q.head.star);
+            root.SetValue("desc", q.desc);
+            root.SetValue("pre_code", q.header);
+
+            //3. 获取被渲染的html
+            ctemplate::Template *tpl = ctemplate::Template::GetTemplate(src_html, ctemplate::DO_NOT_STRIP);
+           
+            //4. 开始完成渲染功能
+            tpl->Expand(&html, &root);
+            return true;
     }
 private:
 };

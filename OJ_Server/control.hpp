@@ -203,7 +203,9 @@ public:
     }
     bool get_number_question(int number, std::string &html)
     {
-        if (_v.OneExpandHtml(_m, number, html))
+        question q;
+        _m.get_question(number,q);
+        if (_v.OneExpandHtml(q, html))
         {
             return true;
         }
