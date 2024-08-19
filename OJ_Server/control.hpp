@@ -221,12 +221,13 @@ public:
         Json::Value in_value;
         reader.parse(injson, in_value);
         std::string code = in_value["code"].asString();
-
+        std::string language=in_value["language"].asString();
         Json::Value compile_value;
         compile_value["input"] = in_value["input"].asString();
         compile_value["code"] = code + q.tail;
         compile_value["cpu_limit"] = q.cpu_limit;
         compile_value["mem_limit"] = q.mem_limit;
+        compile_value["language"] = language;
         Json::FastWriter writer;
         std::string compile_string = writer.write(compile_value);
         while (true)
@@ -257,7 +258,6 @@ public:
                 LOG(ERROR, "当前请求的主机%s : %d可能已经离线", m_ip.c_str(), m_port);
                 _load.DecLoad(m_ip,m_port);
                 _load.Offline_Machine(m_ip,m_port);
-                _load.ShowMachines();//test
             }
         }
     }

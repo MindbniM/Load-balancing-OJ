@@ -9,14 +9,11 @@
     <style>
         /* 起手式, 100%保证我们的样式设置可以不受默认影响 */
         * {
-            /* 消除网页的默认外边距 */
-            margin: 0px;
-            /* 消除网页的默认内边距 */
-            padding: 0px;
+            margin: 0;
+            padding: 0;
         }
 
-        html,
-        body {
+        html, body {
             width: 100%;
             height: 100%;
         }
@@ -25,65 +22,62 @@
             width: 100%;
             height: 50px;
             background-color: black;
-            /* 给父级标签设置overflow，取消后续float带来的影响 */
             overflow: hidden;
         }
 
         .container .navbar a {
-            /* 设置a标签是行内块元素，允许你设置宽度 */
             display: inline-block;
-            /* 设置a标签的宽度,a标签默认行内元素，无法设置宽度 */
             width: 80px;
-            /* 设置字体颜色 */
             color: white;
-            /* 设置字体的大小 */
             font-size: large;
-            /* 设置文字的高度和导航栏一样的高度 */
             line-height: 50px;
-            /* 去掉a标签的下划线 */
             text-decoration: none;
-            /* 设置a标签中的文字居中 */
             text-align: center;
         }
 
-        /* 设置鼠标事件 */
         .container .navbar a:hover {
-            background-color: green;
+            background-color: rgb(69, 180, 213);
         }
 
         .container .navbar .login {
             float: right;
         }
 
-        .container .content {
-            /* 设置标签的宽度 */
-            width: 800px;
-            /* 用来调试 */
-            /* background-color: #ccc; */
-            /* 整体居中 */
-            margin: 0px auto;
-            /* 设置文字居中 */
+        .container .announcement {
+            width: 100%;
+            background-color: #ffeb3b; /* 明显的背景色以引起注意 */
+            color: #000; /* 黑色字体 */
+            padding: 10px;
             text-align: center;
-            /* 设置上外边距 */
-            margin-top: 200px;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .container .content {
+            width: 800px;
+            margin: 20px auto 0;
+            text-align: center;
         }
 
         .container .content .font_ {
-            /* 设置标签为块级元素，独占一行，可以设置高度宽度等属性 */
             display: block;
-            /* 设置每个文字的上外边距 */
             margin-top: 20px;
-            /* 去掉a标签的下划线 */
             text-decoration: none;
-            /* 设置字体大小
-font-size: larger; */
+        }
+
+        .container .content .font_ a {
+            color: #2196F3; /* 浅蓝色 */
+        }
+
+        .container .content .font_ a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 
 <body>
     <div class="container">
-        <!-- 导航栏， 功能不实现-->
+        <!-- 导航栏 -->
         <div class="navbar">
             <a href="#">首页</a>
             <a href="/all-question">题库</a>
@@ -95,8 +89,8 @@ font-size: larger; */
         <!-- 网页的内容 -->
         <div class="content">
             <h1 class="font_">欢迎来到我的OnlineJudge平台</h1>
-            <p class="font_">这个我个人独立开发的一个在线OJ平台</p>
-            <a class="font_" href="/all_questions">开始刷题</a>
+            <p class="font_">这是我个人独立开发的在线OJ平台, 现在只支持基本的刷题功能, 后台编译服务支持C++/Python, 正在扩展其他功能, 敬请期待......</p>
+            <a class="font_" href="/all-question">开始刷题</a>
         </div>
     </div>
 </body>

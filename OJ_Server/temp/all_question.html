@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>在线OJ-题目列表</title>
+    <title>MindbniM的OJ</title>
     <style>
         /* 起手式, 100%保证我们的样式设置可以不受默认影响 */
         * {
@@ -48,7 +48,7 @@
 
         /* 设置鼠标事件 */
         .container .navbar a:hover {
-            background-color: green;
+            background-color: rgb(69, 180, 213);
         }
 
         .container .navbar .login {
@@ -64,16 +64,16 @@
             text-align: center;
         }
 
+        .container .question_list h1 {
+            color: #21e9e6; /* 将标题颜色改为蓝色 */
+        }
+
         .container .question_list table {
             width: 100%;
             font-size: large;
             font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
             margin-top: 50px;
             background-color: rgb(243, 248, 246);
-        }
-
-        .container .question_list h1 {
-            color: green;
         }
 
         .container .question_list table .item {
@@ -89,8 +89,17 @@
         }
 
         .container .question_list table .item a:hover {
-            color: blue;
-            text-decoration: underline;
+            color: rgb(25, 113, 208);
+            text-decoration: none; /* 隐藏下划线 */
+        }
+
+        /* 实现浅蓝色和白色背景交替 */
+        .container .question_list table tr:nth-child(odd) .item {
+            background-color: white;
+        }
+
+        .container .question_list table tr:nth-child(even) .item {
+            background-color: #e6f7ff; /* 设置为浅蓝色 */
         }
 
         .container .footer {
@@ -116,11 +125,11 @@
             <a class="login" href="#">登录</a>
         </div>
         <div class="question_list">
-            <h1>OnlineJuge题目列表</h1>
+            <h1>全部题目</h1>
             <table>
                 <tr>
                     <th class="item">编号</th>
-                    <th class="item">标题</th>
+                    <th class="item">题目</th>
                     <th class="item">难度</th>
                 </tr>
                 {{#question_list}}
