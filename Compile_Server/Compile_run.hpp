@@ -57,6 +57,13 @@ class Compile_run
 
         std::string Stderr=util::Path_util::Stderr(filename);
         util::File_util::Rm(Stderr);
+        if(language=="java")
+        {
+            std::string Tclass=util::Path_util::Tclass(filename);
+            util::File_util::Rm(Tclass);
+            std::string Sclass=util::Path_util::Sclass(filename);
+            util::File_util::Rm(Sclass);
+        }
         
     }
     static Compile::ptr Make_Comp(const std::string& language)
