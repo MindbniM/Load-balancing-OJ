@@ -1,6 +1,7 @@
 ![概要](/img/OJ.png "项目概要")  
 # Compile_Server模块  
 &nbsp;&nbsp;&nbsp;&nbsp;提供对用户提交的代码的编译运行服务,可以有多个这样的服务部署在不同的机器上, 由OJ-Server模块将用户提交的代码负载均衡式的发送给Complie_Server模块
+&nbsp;&nbsp;&nbsp;&nbsp;**现在已经支持C/Cpp/Java/Python**
 &nbsp;&nbsp;&nbsp;&nbsp;**对外接收一个json**
 ``` json5
 {  
@@ -27,7 +28,7 @@
 - 使用cpp-httplib库把这些打包成服务即可
 ## 扩展 / 优化思路
 - 可使用进程池, 避免编译运行服务频繁创建子进程
-- 支持更多语言, 为了避免代码冗余, 可以设计Compile/Run为基类, 派生类可以有Compile_cpp,Run_cpp,Compile_py,Run_py,Compile_java,Run_java等, Compile_Run类只调用Compile/Run, 使用多态调用
+- 支持更多语言
 - 即便是编译服务在其他机器上，也其实是不太安全的，可以将编译服务部署在docker
 - 使用rest_rpc, 替换我们的httplib, 或者自己实现应用层
 # OJ_Server模块
