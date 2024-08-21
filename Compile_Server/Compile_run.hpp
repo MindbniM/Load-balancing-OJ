@@ -59,6 +59,20 @@ class Compile_run
         util::File_util::Rm(Stderr);
         
     }
+    static Compile::ptr Make_Comp(const std::string& language)
+    {
+        if(language=="c_cpp") return std::make_shared<Compile_Cpp>();
+        else if(language=="python") return std::make_shared<Compile_Py>();
+        else if(language=="java") return std::make_shared<Compile_Java>();
+        else return nullptr;
+    }
+    static Runner::ptr Make_Run(const std::string& language)
+    {
+        if(language=="c_cpp") return std::make_shared<Runner_Cpp>();
+        else if(language=="python") return std::make_shared<Runner_Py>();
+        else if(language=="java") return std::make_shared<Runner_Java>();
+        else return nullptr;
+    }
 public:
     static bool start(const std::string &injson, std::string &outjson)
     {
@@ -74,6 +88,8 @@ public:
         int reson = 0;
         int run_code;
         Json::Value out;
+        Compile::ptr Comp=Make_Comp(language);
+        Runner::ptr Run=Make_Run(language);
         if (code.size() == 0)
         {
             reson = CODE_EMPTY;
@@ -81,7 +97,7 @@ public:
         }
         UinqFileName = util::Path_util::get_uinque_name();
         util::File_util::Write(util::Path_util::Srcfile(UinqFileName,language),code);
-        run_code = Compile::Compile_file(UinqFileName,language);
+        run_code = Comp->Compile_file(UinqFileName,language);
         if (run_code > 0)
         {
             reson = NONE_ERROR;
@@ -92,7 +108,7 @@ public:
             reson = COMPILE_ERROR;
             goto END;
         }
-        reson = Runner::Run(UinqFileName,cpulimit,memlimit,language);
+        reson = Run->Run(UinqFileName,cpulimit,memlimit,language);
         if (reson < 0)
         {
             reson = NONE_ERROR;
