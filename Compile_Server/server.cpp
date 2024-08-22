@@ -24,7 +24,6 @@ int main(int argc,char* argv[])
         std::string jsonin=re.body;
         std::string jsonout;
         LOG(Log_util::log_level::INFO,"收到编译运行请求");
-        std::cout<<jsonin<<std::endl;
         if(!jsonin.empty())
         {
             Compile_run::start(jsonin,jsonout);

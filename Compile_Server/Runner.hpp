@@ -136,7 +136,7 @@ public:
         std::string Stdin = util::Path_util::Stdin(filename);
         std::string Stdout = util::Path_util::Stdout(filename);
         std::string Stderr = util::Path_util::Stderr(filename);
-        std::string Test="Test"+filename;
+        std::string Test="Main"+filename;
         int in = open(Stdin.c_str(), O_CREAT | O_WRONLY, 0666);
         int out = open(Stdout.c_str(), O_CREAT | O_WRONLY, 0666);
         int err = open(Stderr.c_str(), O_CREAT | O_WRONLY, 0666);

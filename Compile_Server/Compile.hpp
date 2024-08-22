@@ -66,7 +66,7 @@ public:
     {
         std::string src = util::Path_util::Srcfile(file, language);
         std::string Test=util::Path_util::Tclass(file);
-        util::File_util::Replacement(src,"Test","Test"+file);
+        util::File_util::Replacement(src,"Main","Main"+file);
         util::File_util::Replacement(src,"Solution","Solution"+file);
         std::string err = util::Path_util::Errorfile(file);
         pid_t id = fork();
