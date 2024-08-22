@@ -20,7 +20,7 @@ public:
         temp->Expand(&html,&root);
         return true;
     }
-    bool OneExpandHtml(const question& q,std::string& html)
+    bool OneExpandHtml(const question& q,std::string& html,const std::string& language)
     {
          // 1. 形成路径
             std::string src_html = TEMP_PATH + "one_question.html";
@@ -31,7 +31,9 @@ public:
             root.SetValue("title", q.head.title);
             root.SetValue("star", q.head.star);
             root.SetValue("desc", q.desc);
-            root.SetValue("pre_code", q.header);
+            if(language=="java") root.SetValue("pre_code", q.java.header);
+            else if(language=="python") root.SetValue("pre_code", q.py.header);
+            else root.SetValue("pre_code", q.cpp.header);
 
             //3. 获取被渲染的html
             ctemplate::Template *tpl = ctemplate::Template::GetTemplate(src_html, ctemplate::DO_NOT_STRIP);

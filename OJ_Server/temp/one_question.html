@@ -194,8 +194,15 @@
         // 监听语言选择器的变化事件
         document.getElementById("language-selector").addEventListener("change", function () {
             var language = this.value;
-            editor.session.setMode("ace/mode/" + language);
+            var number = $(".container .part1 .left_desc h3 #number").text();
+
+            // 构建新的URL，包含题目编号和语言参数
+            var newUrl = "/question/" + number + "/?lang=" + language;
+
+            // 重定向到新URL
+            window.location.href = newUrl;
         });
+
 
         function submit() {
             // 收集当前页面的有关数据：1. 代码 2. 题号 3. 语言

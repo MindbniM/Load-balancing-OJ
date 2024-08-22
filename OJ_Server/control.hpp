@@ -32,13 +32,13 @@ struct Machine
     void Offline()
     {
         m->lock();
-        onlie=false;
+        onlie = false;
         m->unlock();
     }
     void Online()
     {
         m->lock();
-        onlie=false;
+        onlie = false;
         m->unlock();
     }
 };
@@ -71,24 +71,25 @@ public:
 
             if (!(i >> mach.ip))
             {
-                std::string log="配置文件不标准, 无法读取IP, 行: " + std::to_string(line_number);
-                LOG(WARNING,log.c_str());
+                std::string log = "配置文件不标准, 无法读取IP, 行: " + std::to_string(line_number);
+                LOG(WARNING, log.c_str());
                 continue;
             }
 
             if (!(i >> mach.port)) // 假设是 port
             {
-                std::string log="配置文件不标准，无法读取端口，行: " + std::to_string(line_number);
-                LOG(WARNING,log.c_str());
+                std::string log = "配置文件不标准，无法读取端口，行: " + std::to_string(line_number);
+                LOG(WARNING, log.c_str());
                 continue;
             }
 
             mach.m = new std::mutex;
+            mach.onlie=true;
             _v.push_back(mach);
         }
         return true;
     }
-    bool SmartChiose(std::string& ip,int& port)
+    bool SmartChiose(std::string &ip, int &port)
     {
         using enum Log_util::log_level;
         _m.lock();
@@ -100,8 +101,8 @@ public:
                 if (m.Load() < load)
                 {
                     load = m.Load();
-                    ip=m.ip;
-                    port=m.port;
+                    ip = m.ip;
+                    port = m.port;
                 }
             }
         }
@@ -113,12 +114,12 @@ public:
         }
         return true;
     }
-    void Offline_Machine(const std::string& ip,int port)
+    void Offline_Machine(const std::string &ip, int port)
     {
         _m.lock();
-        for(auto& i:_v)
+        for (auto &i : _v)
         {
-            if(i.ip==ip&&i.port==port)
+            if (i.ip == ip && i.port == port)
             {
                 i.Offline();
                 break;
@@ -126,12 +127,12 @@ public:
         }
         _m.unlock();
     }
-    void Online_Machine(const std::string& ip,int port)
+    void Online_Machine(const std::string &ip, int port)
     {
         _m.lock();
-        for(auto& i:_v)
+        for (auto &i : _v)
         {
-            if(i.ip==ip&&i.port==port)
+            if (i.ip == ip && i.port == port)
             {
                 i.Online();
                 break;
@@ -139,22 +140,22 @@ public:
         }
         _m.unlock();
     }
-    void IncLoad(const std::string &ip,int port)
+    void IncLoad(const std::string &ip, int port)
     {
-        for(auto& i:_v)
+        for (auto &i : _v)
         {
-            if(i.ip==ip&&i.port==port)
+            if (i.ip == ip && i.port == port)
             {
                 i.IncLoad();
                 break;
             }
         }
     }
-    void DecLoad(const std::string& ip,int port)
+    void DecLoad(const std::string &ip, int port)
     {
-        for(auto& i:_v)
+        for (auto &i : _v)
         {
-            if(i.ip==ip&&i.port==port)
+            if (i.ip == ip && i.port == port)
             {
                 i.DecLoad();
                 break;
@@ -201,11 +202,11 @@ public:
         }
         return false;
     }
-    bool get_number_question(int number, std::string &html)
+    bool get_number_question(int number,const std::string& language, std::string &html)
     {
         question q;
-        _m.get_question(number,q);
-        if (_v.OneExpandHtml(q, html))
+        _m.get_question(number, q);
+        if (_v.OneExpandHtml(q, html,language))
         {
             return true;
         }
@@ -221,10 +222,17 @@ public:
         Json::Value in_value;
         reader.parse(injson, in_value);
         std::string code = in_value["code"].asString();
-        std::string language=in_value["language"].asString();
+        std::string language = in_value["language"].asString();
         Json::Value compile_value;
         compile_value["input"] = in_value["input"].asString();
-        compile_value["code"] = code + q.tail;
+
+        if (language == "java")
+            compile_value["code"] = q.java.include + code + q.java.tail;
+        else if (language == "python")
+            compile_value["code"] = q.py.include + code + q.py.tail;
+        else
+            compile_value["code"] = q.cpp.include + code + q.cpp.tail;
+
         compile_value["cpu_limit"] = q.cpu_limit;
         compile_value["mem_limit"] = q.mem_limit;
         compile_value["language"] = language;
@@ -234,30 +242,30 @@ public:
         {
             std::string m_ip;
             int m_port;
-            if (!_load.SmartChiose(m_ip,m_port))
+            if (!_load.SmartChiose(m_ip, m_port))
             {
                 break;
             }
             LOG(INFO, "选择主机%s : %d", m_ip.c_str(), m_port);
 
             httplib::Client cli(m_ip, m_port);
-            _load.IncLoad(m_ip,m_port);
+            _load.IncLoad(m_ip, m_port);
             if (auto res = cli.Post("/Compile_Run", compile_string, "application/json;charset=utf-8"))
             {
                 if (res->status == 200)
                 {
                     outjson = res->body;
-                    _load.DecLoad(m_ip,m_port);
+                    _load.DecLoad(m_ip, m_port);
                     LOG(INFO, "请求编译和运行服务成功...");
                     break;
                 }
-                _load.DecLoad(m_ip,m_port);
+                _load.DecLoad(m_ip, m_port);
             }
             else
             {
                 LOG(ERROR, "当前请求的主机%s : %d可能已经离线", m_ip.c_str(), m_port);
-                _load.DecLoad(m_ip,m_port);
-                _load.Offline_Machine(m_ip,m_port);
+                _load.DecLoad(m_ip, m_port);
+                _load.Offline_Machine(m_ip, m_port);
             }
         }
     }
