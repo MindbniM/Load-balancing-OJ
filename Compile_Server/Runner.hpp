@@ -16,15 +16,24 @@ public:
     using ptr=std::shared_ptr<Runner>;
     void Set_procLimit(int cpu_time_limit, int mem_limit)
     {
+        Set_cpuLimit(cpu_time_limit);
+        Set_memLimit(mem_limit);
+    }
+    void Set_cpuLimit(int cpu_time)
+    {
         struct rlimit cpu;
         cpu.rlim_max = RLIM_INFINITY;
-        cpu.rlim_cur = cpu_time_limit;
+        cpu.rlim_cur = cpu_time;
         setrlimit(RLIMIT_CPU, &cpu);
+    }
+    void Set_memLimit(int mem_limit)
+    {
         struct rlimit mem;
         mem.rlim_max = RLIM_INFINITY;
         mem.rlim_cur = mem_limit * 1024;
         setrlimit(RLIMIT_AS, &mem);
     }
+
     virtual int Run(const std::string &filename, int cpu_limit, int mem_limit, const std::string &language)=0;
 };
 class Runner_Cpp : public Runner
@@ -158,7 +167,8 @@ public:
             dup2(in, 0);
             dup2(out, 1);
             dup2(err, 2);
-            Set_procLimit(cpu_limit, mem_limit);
+            Set_cpuLimit(cpu_limit*3);
+            //Set_procLimit(cpu_limit, mem_limit);
             execlp("java", "java","-XX:ReservedCodeCacheSize=128m" ,"-Xmx256m","-cp",util::Path::PATH.c_str(),Test.c_str(), nullptr);
             exit(EXEC_ERR);
         }
