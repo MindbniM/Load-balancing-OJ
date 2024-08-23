@@ -190,11 +190,62 @@
             enableSnippets: true,
             enableLiveAutocompletion: true
         });
+        window.onload = function () {
+            // 获取 URL 中的 lang 参数
+            const urlParams = new URLSearchParams(window.location.search);
+            const lang = urlParams.get('lang');
+
+            // 如果 lang 参数存在并且在选择器的选项中
+            if (lang) {
+                document.getElementById("language-selector").value = lang;
+            }
+        };
+
+        // 初始化 ACE 编辑器
+        editor = ace.edit("code");
+
+        // 设置风格和语言
+        editor.setTheme("ace/theme/monokai");
+
+        // 设置默认语法高亮（初始为C/C++）
+        editor.session.setMode("ace/mode/c_cpp");
+
+        // 字体大小
+        editor.setFontSize(16);
+
+        // 设置制表符大小
+        editor.getSession().setTabSize(4);
+
+        // 设置为非只读
+        editor.setReadOnly(false);
+
+        // 启用提示菜单，禁用外部库补全，仅限本地补全
+        editor.setOptions({
+            enableBasicAutocompletion: true,
+            enableSnippets: false,
+            enableLiveAutocompletion: true
+        });
 
         // 监听语言选择器的变化事件
         document.getElementById("language-selector").addEventListener("change", function () {
             var language = this.value;
             var number = $(".container .part1 .left_desc h3 #number").text();
+
+            // 切换 ACE 编辑器的模式
+            switch (language) {
+                case 'c_cpp':
+                    editor.session.setMode("ace/mode/c_cpp");
+                    break;
+                case 'python':
+                    editor.session.setMode("ace/mode/python");
+                    break;
+                case 'java':
+                    editor.session.setMode("ace/mode/java");
+                    break;
+                default:
+                    editor.session.setMode("ace/mode/plain_text");
+                    break;
+            }
 
             // 构建新的URL，包含题目编号和语言参数
             var newUrl = "/question/" + number + "/?lang=" + language;
@@ -202,6 +253,8 @@
             // 重定向到新URL
             window.location.href = newUrl;
         });
+
+
 
 
         function submit() {

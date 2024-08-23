@@ -32,13 +32,13 @@ namespace SQL
 
     const std::string CPP_INCLUDE_SQL = "select include from question_code where language='cpp' and question_id=";
     const std::string CPP_HEADER_SQL = "select header from question_code where language='cpp' and question_id=";
-    const std::string CPP_TAIL_SQL = "select tail from questions_code where language='cpp' and question_id=";
+    const std::string CPP_TAIL_SQL = "select tail from question_code where language='cpp' and question_id=";
     const std::string JAVA_INCLUDE_SQL = "select include from question_code where language='java' and question_id=";
     const std::string JAVA_HEADER_SQL = "select header from question_code where language='java' and question_id=";
-    const std::string JAVA_TAIL_SQL = "select tail from questions_code where language='java' and question_id=";
+    const std::string JAVA_TAIL_SQL = "select tail from question_code where language='java' and question_id=";
     const std::string PY_INCLUDE_SQL = "select include from question_code where language='python' and question_id=";
     const std::string PY_HEADER_SQL = "select header from question_code where language='python' and question_id=";
-    const std::string PY_TAIL_SQL = "select tail from questions_code where language='python' and question_id=";
+    const std::string PY_TAIL_SQL = "select tail from question_code where language='python' and question_id=";
 
     const std::string CPU_LIMIT_SQL = "select time_limit from questions where id=";
     const std::string MEM_LIMIT_SQL = "select mem_limit from questions where id=";
@@ -70,21 +70,24 @@ public:
             sql = SQL::CPP_TAIL_SQL + id;
             q.cpp.tail = _root.exec(sql.c_str());
             sql = SQL::CPP_INCLUDE_SQL + id;
-            q.cpp.include = _root.exec(sql.c_str());
+            std::string in=_root.exec(sql.c_str());
+            if(in.find("NULL")==std::string::npos) q.cpp.include=in;
 
             sql = SQL::JAVA_HEADER_SQL + id;
             q.java.header = _root.exec(sql.c_str());
             sql = SQL::JAVA_TAIL_SQL + id;
             q.java.tail = _root.exec(sql.c_str());
             sql = SQL::JAVA_INCLUDE_SQL + id;
-            q.java.include = _root.exec(sql.c_str());
+            in=_root.exec(sql.c_str());
+            if(in.find("NULL")==std::string::npos) q.java.include=in;
 
             sql = SQL::PY_HEADER_SQL + id;
             q.py.header = _root.exec(sql.c_str());
             sql = SQL::PY_TAIL_SQL + id;
             q.py.tail = _root.exec(sql.c_str());
             sql = SQL::PY_INCLUDE_SQL + id;
-            q.py.include = _root.exec(sql.c_str());
+            in=_root.exec(sql.c_str());
+            if(in.find("NULL")==std::string::npos) q.py.include=in;
 
             sql = SQL::CPU_LIMIT_SQL + id;
             q.cpu_limit = std::stoi(_root.exec(sql.c_str()));
@@ -95,6 +98,7 @@ public:
             i++;
         }
         LOG(Log_util::log_level::INFO, "获取%d个题目信息", i - 1);
+        //test();
     }
     bool get_question(int id, question &q)
     {
