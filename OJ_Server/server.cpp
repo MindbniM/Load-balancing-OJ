@@ -39,10 +39,25 @@ int main()
         std::string outjson;
         ctrl.judge(id,injson,outjson);
         rp.set_content(outjson,"application/json;charset=utf-8"); });
-    //sr.Get("/(.*)", [&](const httplib::Request &re, httplib::Response &rp)
-    //       {
-    //LOG(Log_util::log_level::INFO, "Received request for path: %s", re.path.c_str());
-    //rp.set_content("This is a fallback handler", "text/plain"); });
+
+    // 登录
+    sr.Post("/login", [&ctrl](const httplib::Request &re, httplib::Response &rp)
+            {
+    std::string injson = re.body;
+    std::string outjson;
+    uint32_t id = ctrl.login(injson, outjson);
+
+    if (id!=0||id!=1) {
+        // 设置会话 ID 的 Cookie
+        std::string cookie = "session_id=" + std::to_string(id) + "; Path=/; HttpOnly";
+        rp.set_header("Set-Cookie", cookie);
+
+        // 可选：响应中直接返回会话 ID
+        rp.set_content(std::to_string(id), "text/plain");
+    } else {
+        // 如果登录失败，返回错误信息
+        rp.set_content(outjson, "application/json;charset=utf-8");
+    } });
 
     sr.set_base_dir("../wwwroot");
     sr.listen("0.0.0.0", 80);

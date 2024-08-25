@@ -6,6 +6,7 @@
 #include "view.hpp"
 #include "httplib.h"
 #include <jsoncpp/json/json.h>
+#include"Cookie.hpp"
 struct Machine
 {
     std::string ip;
@@ -84,7 +85,7 @@ public:
             }
 
             mach.m = new std::mutex;
-            mach.onlie=true;
+            mach.onlie = true;
             _v.push_back(mach);
         }
         return true;
@@ -202,11 +203,11 @@ public:
         }
         return false;
     }
-    bool get_number_question(int number,const std::string& language, std::string &html)
+    bool get_number_question(int number, const std::string &language, std::string &html)
     {
         question q;
         _m.get_question(number, q);
-        if (_v.OneExpandHtml(q, html,language))
+        if (_v.OneExpandHtml(q, html, language))
         {
             return true;
         }
@@ -269,8 +270,50 @@ public:
             }
         }
     }
+    //{
+    //  "username": username,
+    //  "password": password
+    //}
+    //{
+    //  "message" : "登录成功",
+    //  "Cookie[可选]" : 1 std::string
+    //}
+    uint32_t login(const std::string &injson, std::string &outjson)
+    {
+        //1. 用户已经登录, 则刷新key
+        //2. 用户不存在
+        //3. 密码账号错误
+        //4. 从数据库加载用户数据到内存, 生成cookie映射, 返回cookie_id 
+        Json::Value root;
+        Json::Reader re;
+        re.parse(injson,root);
+        std::string name=root["name"].asString();
+        std::string password=root["password"].asString();
+        uint32_t c =_c.push(name,password);
+        Json::Value o;
+        Json::FastWriter w;
+        if(c==0)
+        {
+            o["status"]=1;
+            o["message"]="用户不存在";
+        }
+        else if(c==1)
+        {
+            o["status"]=2;
+            o["message"]="密码错误";
+        }
+        else
+        {
+            o["status"]=0;
+            o["message"]="登录成功";
+            o["Cookie"]=c;
+        }
+        outjson=w.write(o);
+        return c;
+    }
 
 private:
+    Cookies _c;
     Model _m;
     View _v;
     Load _load;
