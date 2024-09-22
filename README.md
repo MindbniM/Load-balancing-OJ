@@ -1,7 +1,7 @@
 ![概要](/img/OJ.png "项目概要")  
 # Compile_Server模块  
 &nbsp;&nbsp;&nbsp;&nbsp;提供对用户提交的代码的编译运行服务,可以有多个这样的服务部署在不同的机器上, 由OJ-Server模块将用户提交的代码负载均衡式的发送给Complie_Server模块
-&nbsp;&nbsp;&nbsp;&nbsp;**现在已经支持C/Cpp/Java/Python**
+&nbsp;&nbsp;&nbsp;&nbsp;**现在已经支持C/Cpp/Java/Python**  
 &nbsp;&nbsp;&nbsp;&nbsp;**对外接收一个json**
 ``` json5
 {  
