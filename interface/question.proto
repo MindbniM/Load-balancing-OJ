@@ -1,0 +1,67 @@
+syntax = "proto3";
+package MindbniM;
+option cc_generic_services = true;
+message QuestionHeadList 
+{
+    int64 number = 1;              //题目编号
+    string title = 2;               //题目标题
+    string star = 3;                //题目难度
+}
+message QuestionInfo
+{
+    int64 number = 1;              //题目编号
+    string title = 2;               //题目标题
+    string star = 3;                //题目难度
+    string description = 4;         //题目描述
+    string pre_code = 5;            //题目预设代码
+    int32 cpu_limit = 6;            //对这份代码的时间限制  
+    int32 mem_limit = 7;            //内存限制
+}
+//获取所有题目列表
+message GetQuestionListRequest 
+{
+    string request_id = 1;          //请求ID
+}
+message GetQuestionListResponse 
+{
+    repeated QuestionHeadList question_list = 1; //题目列表
+}
+//获取单个题目详情
+message GetQuestionRequest
+{
+    int64 number=1;                  //题目编号
+    string laguage=2;                //编程语言
+}
+message GetQuestionResponse
+{
+    QuestionInfo question_info=1;   //题目详情
+}
+//搜索题目
+message SearchQuestionRequest
+{
+    string keyword=1;                //关键字
+}
+message SearchQuestionResponse
+{
+    repeated QuestionHeadList question_list=1; //题目列表
+}
+//获取题目隐藏代码
+message GetQuestionCodeRequest
+{
+    int64 number=1;                  //题目编号
+    string laguage=2;                //编程语言
+}
+message GetQuestionCodeResponse
+{
+    string include=1;               //头文件
+    string test=2;                  //测试代码
+}
+service QuestionService
+{
+    rpc GetQuestionList(GetQuestionListRequest) returns (GetQuestionListResponse);
+    rpc GetQuestion(GetQuestionRequest) returns (GetQuestionResponse);
+    rpc SearchQuestion(SearchQuestionRequest) returns (SearchQuestionResponse);
+    rpc GetQuestionCode(GetQuestionCodeRequest) returns (GetQuestionCodeResponse);
+}
+
+

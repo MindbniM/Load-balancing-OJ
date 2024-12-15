@@ -1,0 +1,37 @@
+syntax = "proto3";
+package MindbniM;
+option cc_generic_services = true;
+message ForumHead
+{
+    int64 number = 1;               //帖子编号
+    string title = 2;               //帖子标题
+    string author = 3;              //作者
+}
+message ForumInfo
+{
+    ForumHead forum_head = 1;       //帖子头部
+    string content = 2;             //帖子内容
+}
+//获取所有帖子列表
+message GetForumListRequest
+{
+    string request_id = 1;          //请求ID
+}
+message GetForumListResponse
+{
+    repeated ForumHead forum_list = 1; //帖子列表
+}
+//获取单个帖子详情
+message GetForumRequest
+{
+    int64 number = 1;               //帖子编号
+}
+message GetForumResponse
+{
+    ForumInfo forum_info = 1;       //帖子详情
+}
+service ForumService
+{
+    rpc GetForumList(GetForumListRequest) returns (GetForumListResponse);
+    rpc GetForum(GetForumRequest) returns (GetForumResponse);
+}

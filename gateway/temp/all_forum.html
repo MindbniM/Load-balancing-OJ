@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindbniM的OJ - 论坛</title>
+    <style>
+        /* 起手式, 100%保证我们的样式设置可以不受默认影响 */
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+        }
+
+        .container .navbar {
+            width: 100%;
+            height: 50px;
+            background-color: black;
+            overflow: hidden;
+        }
+
+        .container .navbar a {
+            display: inline-block;
+            width: 80px;
+            color: white;
+            font-size: large;
+            line-height: 50px;
+            text-decoration: none;
+            text-align: center;
+        }
+
+        .container .navbar a:hover {
+            background-color: rgb(69, 180, 213);
+        }
+
+        .container .navbar .login {
+            float: right;
+        }
+
+        .container .forum_list {
+            padding-top: 50px;
+            width: 800px;
+            height: 100%;
+            margin: 0px auto;
+            text-align: center;
+        }
+
+        .container .forum_list h1 {
+            color: #21e9e6; /* 设置标题的颜色 */
+        }
+
+        .container .forum_list table {
+            width: 100%;
+            font-size: large;
+            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+            margin-top: 50px;
+            background-color: rgb(243, 248, 246);
+        }
+
+        .container .forum_list table .item {
+            width: 100px;
+            height: 40px;
+            font-size: large;
+        }
+
+        .container .forum_list table .item a {
+            text-decoration: none;
+            color: black;
+        }
+
+        .container .forum_list table .item a:hover {
+            color: rgb(25, 113, 208);
+        }
+
+        /* 实现浅蓝色和白色背景交替 */
+        .container .forum_list table tr:nth-child(odd) .item {
+            background-color: white;
+        }
+
+        .container .forum_list table tr:nth-child(even) .item {
+            background-color: #e6f7ff; /* 设置为浅蓝色 */
+        }
+
+        .container .footer {
+            width: 100%;
+            height: 50px;
+            text-align: center;
+            line-height: 50px;
+            color: #ccc;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="navbar">
+            <a href="/">首页</a>
+            <a href="/all-question">题库</a>
+            <a href="/all-forum">论坛</a>
+            <a class="login" href="#">登录</a>
+        </div>
+
+        <div class="forum_list">
+            <h1>论坛文章列表</h1>
+            <table>
+                <tr>
+                    <th class="item">文章ID</th>
+                    <th class="item">文章标题</th>
+                    <th class="item">作者</th>
+                </tr>
+                <!-- 这里是动态生成的文章数据 -->
+                {{#forum_list}}
+                <tr>
+                    <td class="item">{{id}}</td>
+                    <td class="item"><a href="/forum/{{id}}.html">{{title}}</a></td>
+                    <td class="item">{{author}}</td>
+                </tr>
+                {{/forum_list}}
+            </table>
+        </div>
+
+        <div class="footer">
+            <h4>@MindbniM</h4>
+        </div>
+    </div>
+</body>
+
+</html>

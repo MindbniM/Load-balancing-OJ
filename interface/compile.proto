@@ -1,0 +1,22 @@
+syntax = "proto3";
+package MindbniM;
+option cc_generic_services = true;
+message CompileRequest 
+{
+    string code = 1;                //用户提交的代码+测试代码
+    string input = 2;               //用户用来自测输入
+    string language = 3;            //代码的语言类型
+    int32 cpu_limit = 4;            //对这份代码的时间限制  
+    int32 mem_limit = 5;            //内存限制  
+}
+message CompileResponse 
+{
+    string reason = 1;              //状态码描述
+    int32 status = 2;               //结果状态码
+    optional string stderr = 3;     //如果运行成功的标准错误
+    optional string stdout = 4;     //如果运行成功的标准输出
+}
+service CompileService 
+{
+    rpc Compile(CompileRequest) returns (CompileResponse);
+}

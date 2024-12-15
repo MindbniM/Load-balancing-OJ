@@ -1,0 +1,82 @@
+/*
+用户操作服务器的子服务注册信息： /service/user_service/instance_id
+服务名称：/service/user_service
+实例 ID: instance_id 每个能够提供用户操作服务的子服务器唯一 ID
+当服务发现的时候，通过 /service/user_service 进行服务发现，就可以发现所有的
+能够提供用户操作的实例信息了
+*/
+syntax = "proto3";
+package MindbniM;
+option cc_generic_services = true;
+//----------------------------
+message UserInfo
+{
+    string user_id = 1;         //用户 ID
+    string nickname = 2;        //昵称
+}
+
+//用户名注册 
+message UserRegisterReq 
+{
+    string request_id = 1;
+    string nickname = 2;
+    string password = 3;
+} 
+message UserRegisterRsp 
+{
+    string request_id = 1;
+    bool success = 2;
+    optional string errmsg = 3;
+} 
+//----------------------------
+//用户名登录 
+message UserLoginReq 
+{
+    string request_id = 1;
+    string nickname = 2;
+    string password = 3;
+} 
+message UserLoginRsp 
+{
+    string request_id = 1;
+    bool success = 2;
+    optional string errmsg = 3;
+    optional string login_session_id = 4;
+} 
+//----------------------------
+//个人信息获取-这个只用于获取当前登录用户的信息
+message GetUserInfoReq 
+{
+    string request_id = 1;
+    optional string user_id = 2;
+    optional string session_id = 3;
+} 
+message GetUserInfoRsp 
+{
+    string request_id = 1;
+    bool success = 2;
+    optional string errmsg = 3; 
+    optional UserInfo user_info = 4;
+} 
+//用户名修改
+message SetUserNicknameReq 
+{
+    string request_id = 1;
+    optional string user_id = 2;
+    optional string session_id = 3;
+    string nickname = 4;
+} 
+message SetUserNicknameRsp 
+{
+    string request_id = 1;
+    bool success = 2;
+    string errmsg = 3;
+}
+//----------------------------
+service UserService 
+{
+    rpc UserRegister(UserRegisterReq) returns (UserRegisterRsp);
+    rpc UserLogin(UserLoginReq) returns (UserLoginRsp);
+    rpc GetUserInfo(GetUserInfoReq) returns (GetUserInfoRsp);
+    rpc SetUserNickname(SetUserNicknameReq) returns(SetUserNicknameRsp);
+}

@@ -7,6 +7,7 @@
 #include<sys/stat.h>
 #include<fcntl.h>
 #include<sys/time.h>
+#include<regex>
 namespace util
 {
     namespace Path
@@ -17,10 +18,14 @@ namespace util
         const std::string PATH_STDIN="_in.txt";
         const std::string PATH_STDOUT="_out.txt";
         const std::string PATH_STDERR="_err.txt";
+        const std::string PATH_CLASS=".class";
     }
     namespace Language
     {
         const std::string CPP(".cpp");
+        const std::string PY(".py");
+        const std::string JAVA(".java");
+        const std::string C(".c");
     }
    class Path_util
     {
@@ -41,8 +46,11 @@ namespace util
             return Add_suffix(filename,Path::PATH_ERR);
         }
         //源文件
-        std::string static Srcfile(const std::string& filename)
+        std::string static Srcfile(const std::string& filename,const std::string& language)
         {
+            if(language=="python") return Add_suffix(filename,Language::PY);
+            else if(language=="java") return Add_suffix(filename,Language::JAVA);
+            else if(language=="c") return Add_suffix(filename,Language::C);
             return Add_suffix(filename,Language::CPP);
         }
         //标准输入
@@ -60,7 +68,14 @@ namespace util
         {
             return Add_suffix(filename,Path::PATH_STDERR);
         }
-        
+        std::string static Tclass(const std::string& filename)
+        {
+            return Add_suffix("Main"+filename,Path::PATH_CLASS);
+        }
+        std::string static Sclass(const std::string& filename)
+        {
+            return Add_suffix("Solution"+filename,Path::PATH_CLASS);
+        }
         //获得一个唯一文件名
         std::string static get_uinque_name()
         {
@@ -111,6 +126,14 @@ namespace util
                 return true;
             }
             return false;
+        }
+        void static Replacement(const std::string& filename,const std::string& Rs,const std::string& str)
+        {
+            std::string code;
+            Read(filename,code,true);
+            std::regex re(Rs);
+            code=std::regex_replace(code,re,str);
+            Write(filename,code);
         }
     };
 
